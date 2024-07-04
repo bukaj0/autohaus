@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booked Test Drives</title>
+    <link rel="stylesheet" href="/style.css">
+<style>
+    button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 200px;
+    }
+    button:hover {
+        background-color: #006cdf;
+    }
+</style>
+    
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/home-employee/manage-cars">Manage Cars</a>
+        <a href="/home-employee/transactions">Transactions</a>
+        <a class="active" href="/home-employee/booked">Booked Test Drives</a>
+        <a href="/home-employee/reviews">All Reviews</a>
+        <a href="/home-employee/parts">Part Deliverants</a>
+        <a href="/home-employee/statistics">Statistics</a>
+        <a href="/home-employee/account" class="account-link">
+            <img src="/account.png" alt="Description of the image" class="account-icon">
+        </a>
+        <a class="user-name" id="user-name">name</a>
+    </div>
+        <div id="cars-container" style="padding-top: 60px;"></div>
+    <script>
+
+        function deleteTestDrive(kundeId) {
+            if (confirm('Are you sure you want to delete this test drive?')) {
+                fetch(`/api/managertestdrivedelete?kundeId=${kundeId}`, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to delete test drive');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error deleting test drive:', error);
+                    alert('Failed to delete test drive. CONTACT THE AUTHORITIES RIGHT NOW !!!!!');
+                });
+            }
+        }
+
+        fetch('/api/user')
+                .then(data => {
+                    console.log(data);
+                    if (!data.ok) {
+                        throw new Error('Failed to fetch user data');
+                    }
+                    return data.json();
+                })
+                .then(data => {
+                    document.getElementById('user-name').textContent = `${data.firstName}`;
+        })
+
+        fetch('/api/alltestdrives')
+            .then(data => {
+                if (!data.ok) {
+                    alert('No booked test drive.');
+                    throw new Error('Failed to fetch user data');
+                }
+                return data.json();
+            })
+            .then(data => {
+                console.log("test drives: ",data)
+                const carsContainer = document.getElementById('cars-container');
+                if (data.rows.length > 0)
+                {
+                    data.rows.forEach(testdrive => {
+                        const carDiv = document.createElement('div');
+                        carDiv.className = 'car-box';
+
+                        const imageUrl = testdrive[7];
+
+                        carDiv.innerHTML = `
+                            <div class="car-details">
+                                <img src="${imageUrl}" alt="Car Image" class="car-image">
+                                <div>
+                                    <p>Customer ID: ${testdrive[0]}<p>
+                                    <p>Customer NAME: ${testdrive[1]}<p>
+                                    <p>Customer EMAIL: ${testdrive[2]}<p>
+                                    <p>Car ID: ${testdrive[3]}<p>
+                                    <p>Car Modell: ${testdrive[4]}<p>
+                                    <p>Car Price: ${testdrive[5]}<p>
+                                    <p>Car Type: ${testdrive[6]}<p>
+                                </div>
+                            </div>
+                            <button onclick="deleteTestDrive(${testdrive[0]})" class="redirect-button">Delete Test Drive</button>
+                        `;
+                        carsContainer.appendChild(carDiv);
+                        })
+                }
+                else
+                {
+                    console.log("NO RESULTS");
+                    const carDiv = document.createElement('div');
+                    carDiv.className = 'car-box';
+                    carDiv.innerHTML = ` <div class="car-details"><h1>NO TEST DRIVES BOOKED</h1></div>`;
+                    carsContainer.appendChild(carDiv);
+                }
+
+            })
+            .catch(error => {
+                console.error('Error loading the test drive data:', error);
+            });
+
+    </script>

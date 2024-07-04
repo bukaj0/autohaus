@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form id="loginForm" action="/login" method="POST">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>Select Role:</label><br>
+                <div>
+                    <input type="checkbox" id="employee" name="type" value="employee">
+                    <label for="employee">Employee</label>
+                    <input type="checkbox" id="customer" name="type" value="customer">
+                    <label for="customer">Customer</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Login">
+            </div>
+        </form>
+        <div class="form-group">
+            <button id="registerButton">Register</button>
+        </div>
+    </div>
+    <script>
+        const employeeCheckbox = document.getElementById('employee');
+        const customerCheckbox = document.getElementById('customer');
+        const loginForm = document.getElementById('loginForm');
+        const registerButton = document.getElementById('registerButton');
+
+        employeeCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                customerCheckbox.required = false;
+                customerCheckbox.checked = false;
+            } else {
+                customerCheckbox.required = true;
+            }
+        });
+
+        customerCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                employeeCheckbox.required = false;
+                employeeCheckbox.checked = false;
+            } else {
+                employeeCheckbox.required = true;
+            }
+        });
+
+        registerButton.addEventListener('click', function(event) {
+            event.preventDefault();
+            if (!employeeCheckbox.checked && !customerCheckbox.checked) {
+                alert("Select User Type");
+            } 
+            else if (!employeeCheckbox.checked && customerCheckbox.checked)
+            {
+                window.location.href = '/register-customer';
+            }
+            else if (employeeCheckbox.checked && !customerCheckbox.checked)
+            {
+                window.location.href = '/register-employee';
+            }
+        });
+
+        loginForm.addEventListener('submit', function(event) {
+            if (!email.checkValidity() || !password.checkValidity() || 
+                (!employeeCheckbox.checked && !customerCheckbox.checked)) {
+                event.preventDefault();
+                alert("Please fill out all fields");
+            }
+        });
+    </script>
+</body>
+</html>

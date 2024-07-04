@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part Deliverants</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .form-group input[type="submit"]:hover,
+        .form-group input[type="button"]:hover,
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        table {
+            max-width: 100%;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 4px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <a href="/home-employee/manage-cars">Manage Cars</a>
+        <a href="/home-employee/transactions">Transactions</a>
+        <a href="/home-employee/booked">Booked Test Drives</a>
+        <a href="/home-employee/reviews">All Reviews</a>
+        <a class="active" href="/home-employee/parts">Part Deliverants</a>
+        <a href="/home-employee/statistics">Statistics</a>
+        <a href="/home-employee/account" class="account-link">
+            <img src="/account.png" alt="Description of the image" class="account-icon">
+        </a>
+        <a class="user-name" id="user-name">name</a>
+    </div>
+    <div id="cars-container" style="padding-top: 60px;">
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th>Car ID</th>
+                    <th>Car Modell</th>
+                    <th>FABRIK ID</th>
+                    <th>FABRIK Name</th>
+                    <th>FABRIK Location</th>
+                    <th>Part ID</th>
+                    <th>Part Price</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/user')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('user-name').textContent = `${data.firstName}`;
+                })
+                .catch(error => console.error('Error:', error));
+
+            fetch('/api/beliefert')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch beliefert data');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.querySelector('#results-table tbody');
+                    tableBody.innerHTML = '';
+
+                    data.forEach(record => {
+                        const row = document.createElement('tr');
+
+                        row.innerHTML = `
+                            <td>${record.auto_id}</td>
+                            <td>${record.auto_modell}</td>
+                            <td>${record.fabrik_id}</td>
+                            <td>${record.fabrik_name}</td>
+                            <td>${record.standort}</td>
+                            <td>${record.autoteil_id}</td>
+                            <td>${record.preis}</td>
+                        `;
+
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error fetching beliefert data:', error));
+        });
+    </script>
+</body>
+</html>

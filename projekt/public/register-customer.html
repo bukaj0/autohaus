@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Customer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Register Customer</h1>
+        <form id="registerForm" action="/register-customer" method="POST">
+            <div class="form-group">
+                <label for="name">Enter your First Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="surname">Enter your Last Name:</label>
+                <input type="text" id="surname" name="surname" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="password_check">Repeat your Password:</label>
+                <input type="password" id="password_check" name="password_check" required>
+            </div>
+            <div class="form-group">
+                <button type="button" id="registerButton">Register</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const registerButton = document.getElementById('registerButton');
+        const registerForm = document.getElementById('registerForm');
+
+        registerButton.addEventListener('click', function(event) {
+            const name = document.getElementById('name');
+            const surname = document.getElementById('surname');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const passwordCheck = document.getElementById('password_check');
+
+            if (!name.checkValidity()) {
+                alert("Please enter your first name.");
+                return;
+            }
+
+            if (!surname.checkValidity()) {
+                alert("Please enter your last name.");
+                return;
+            }
+
+            if (!email.checkValidity()) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+
+            if (!password.checkValidity()) {
+                alert("Please enter your password.");
+                return;
+            }
+
+            if (!passwordCheck.checkValidity()) {
+                alert("Please repeat your password.");
+                return;
+            }
+
+            if (password.value !== passwordCheck.value) {
+                alert("Passwords do not match.");
+                return;
+            }
+
+            registerForm.submit();
+        });
+    </script>
+</body>
+</html>

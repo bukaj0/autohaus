@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Listing</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .car-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .car-image {
+            width: 300px;
+            height: 250px;
+            height: auto;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            width: 100px;
+            margin-top: 20px;
+        }
+
+        .arrow {
+            cursor: pointer;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" href="#home-customer">Discover</a>
+        <a href="#search">Search</a>
+        <a href="#saved">Saved</a>
+        <a href="#booked">Booked</a>
+        <a href="#contact">Contact</a>
+        <a href="#account" class="account-link">
+            <img src="account.png" alt="Description of the image" class="account-icon">
+        </a>
+    </div>
+
+    <div class="car-container">
+        <img id="car-image" class="car-image" src="" alt="Car Image">
+        <div id="car-details"></div>
+        <div class="navigation">
+            <div id="prev-arrow" class="arrow">&#9664;</div>
+            <div id="next-arrow" class="arrow">&#9654;</div>
+        </div>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        let cars = [];
+
+        async function fetchCarData() {
+            try {
+                console.log("Fetching car data...");
+                const response = await fetch('/api/cars');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const carsData = await response.json();
+                cars = carsData.rows;
+                console.log("Cars data:", cars);
+
+                displayCar(currentIndex);
+            } catch (error) {
+                console.error('Error fetching car data:', error);
+            }
+        }
+
+        function displayCar(index) {
+            const car = cars[index];
+            const carImage = document.getElementById('car-image');
+            const carDetails = document.getElementById('car-details');
+
+            const temp = car[17].split(', ');
+            const imageUrl = temp[0];
+            carImage.src = imageUrl;
+
+            carDetails.innerHTML = `
+                <p>Marke: ${car[1]}</p>
+                <p>Modell: ${car[2]}</p>
+                <p>Baujahr: ${car[3]}</p>
+                <p>Preis: ${car[4]}</p>
+                <p>Leistung: ${car[5]}</p>`;
+        }
+
+        document.getElementById('next-arrow').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % cars.length;
+            displayCar(currentIndex);
+        });
+
+        document.getElementById('prev-arrow').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + cars.length) % cars.length;
+            displayCar(currentIndex);
+        });
+
+        window.onload = fetchCarData;
+    </script>
+</body>
+</html>

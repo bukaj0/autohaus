@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Welcome</title>
+        <link rel="stylesheet" href="/style.css">
+    <style>
+        .welcome-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 30em;
+            height: 18em;
+            margin-top: -9em;
+            margin-left: -15em;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+    
+    </head>
+    <body>
+        <div class="topnav">
+            <a href="/home-employee/manage-cars">Manage Cars</a>
+            <a href="/home-employee/transactions">Transactions</a>
+            <a href="/home-employee/booked">Booked Test Drives</a>
+            <a href="/home-employee/reviews">All Reviews</a>
+            <a href="/home-employee/parts">Part Deliverants</a>
+            <a href="/home-employee/statistics">Statistics</a>
+            <a href="/home-employee/account" class="account-link">
+                <img src="/account.png" alt="Description of the image" class="account-icon">
+            </a>
+            <a class="user-name" id="user-name">name</a>
+        </div>
+        <div class="welcome-container">
+            <h1>Welcome employee</h1>
+            <h2>Please select one of the pages in the Navigation Bar Above</h2>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('/api/user')
+                    .then(data => {
+                        console.log(data);
+                        if (!data.ok) {
+                            throw new Error('Failed to fetch user data');
+                        }
+                        return data.json();
+                    })
+                    .then(data => {
+                        document.getElementById('user-name').textContent = `${data.firstName}`;
+                })
+            });
+        </script>
+    </body>
+</html>

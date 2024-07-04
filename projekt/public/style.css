@@ -1,0 +1,307 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway:800|Merriweather+Sans|Share+Tech+Mono");
+/*taken from https://auth0.com/blog/create-a-simple-and-stylish-node-express-app/*/
+:root {
+    --ui-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 4px 5px 0 rgba(0, 0, 0, 0.06), 0 1px 10px 0 rgba(0, 0, 0, 0.08);
+    fill: rgba(0, 0, 0, 0.54);
+    --ui-shadow-border: 1px solid rgba(0, 0, 0, 0.14);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+
+h1,
+h2,
+h3 {
+    font-family: "Raleway", sans-serif;
+    text-transform: uppercase;
+
+    padding: 0;
+    margin: 0;
+
+    color: #2a3747;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+}
+
+.View {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    height: 100%;
+    width: 100%;
+
+    padding: 20px;
+
+    background-size: cover;
+
+    font-family: "Merriweather Sans", sans-serif;
+}
+
+.Banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+
+    border-radius: 5px;
+
+    overflow: hidden;
+    background: white;
+    padding: 15px;
+
+    font-family: "Share Tech Mono", monospace;
+
+    border-bottom: var(--ui-shadow-border);
+    box-shadow: var(--ui-shadow);
+}
+
+.Message {
+    background: white;
+    padding: 30px;
+    border-bottom: var(--ui-shadow-border);
+    box-shadow: var(--ui-shadow);
+}
+
+.Message > .Title {
+    padding-bottom: 20px;
+}
+
+.Message > .Details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.5em;
+}
+
+.NavButtons {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.NavButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 55px;
+    width: 150px;
+
+    background: #fa4141;
+
+    border-radius: 30px;
+
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+
+    text-transform: capitalize;
+
+    border-bottom: var(--ui-shadow-border);
+    box-shadow: var(--ui-shadow);
+}
+
+/*
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+*/
+
+.container {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    position: absolute; 
+    top: 50%;  
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+}
+
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-group input[type="submit"],
+.form-group button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-group button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-group input[type="submit"]:hover,
+.form-group button:hover {
+    background-color: #0056b3;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.checkbox-group label {
+    margin-left: 8px;
+    margin-right: 20px;
+}
+
+.topnav {
+    background-color: #333;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000; /* Adjust as needed to stay above other content */
+}
+
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-decoration: none;
+    font-size: 17px;
+    transition: background-color 200ms, color 200ms;
+}
+
+.topnav a.active {
+    background-color: #087cfc;
+    color: white;
+}
+
+.topnav a:hover {
+    background-color: #ffffff;
+    color: black;
+}
+
+.topnav .account-link {
+    float: right;
+}
+
+.topnav .user-name{
+    float:right
+}
+
+.topnav .account-icon {
+    width: 15px;
+    height: 15px;
+}
+
+/* car list */
+.car-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid black;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 30px;
+    border-color: #d4d4d4;
+    }
+
+    .car-image {
+        width: 300px; 
+        height: auto;
+        margin-right: 10px;
+    }
+
+    .car-details {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+    }
+
+    .redirect-button {
+        margin-left: auto;
+    }

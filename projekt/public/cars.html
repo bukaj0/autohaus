@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cars Display</title>
+    <link rel="stylesheet" href="/style.css">
+<style>
+    button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 200px;
+    }
+    button:hover {
+        background-color: #006cdf;
+    }
+</style>
+    
+</head>
+
+<body>
+    <div class="topnav">
+        <a class="active" href="/home-customer/discover">Discover</a>
+        <a href="/home-customer/search">Search</a>
+        <a href="/home-customer/booked">Booked</a>
+        <a href="/home-customer/reviews">All Reviews</a>
+        <a href="/home-customer/myreviews">My Reviews</a>
+        <a href="/home-customer/purchased-cars">Purchased Cars</a>
+        <a href="/home-customer/account" class="account-link">
+            <img src="/account.png" alt="Account Icon" class="account-icon">
+        </a>
+        <a class="user-name" id="user-name">name</a>
+    </div>
+    <h1 id="brand-title">Cars from the Brand</h1>
+    <div id="cars-container"></div>
+
+    <script>
+
+        function bookCar(carId) {
+            console.log(carId);
+            fetch(`/api/book-car?carId=${encodeURIComponent(carId)}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to book car');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Booking successful!');
+            })
+            .catch(error => console.error('Error booking car:', error));
+        }
+
+        function buyCar(carId) {
+            console.log("Buying car:", carId);
+            fetch(`/api/buy-car?carId=${encodeURIComponent(carId)}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to buy car');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Purchase successful!');
+            })
+            .catch(error => console.error('Error buying car:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const brand = urlParams.get('brand');
+            if (!brand) {
+                document.getElementById('brand-title').innerText = 'Brand not specified';
+                return;
+            }
+    
+            document.getElementById('brand-title').innerText = `Cars from ${brand}`;
+            fetch(`/api/cars?brand=${encodeURIComponent(brand)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const carsContainer = document.getElementById('cars-container');
+                    data.rows.forEach(car => {
+                        const carDiv = document.createElement('div');
+                        carDiv.className = 'car-box';
+    
+                        const imageUrl = car[17].split(', ')[0];
+
+                        const redirectUrl = "https://example.com/detail?id=" + car[0];
+    
+                        carDiv.innerHTML = `
+                            <div class="car-details">
+                                <img src="${imageUrl}" alt="Car Image" class="car-image">
+                                <div>
+                                    <h2>${car[2]}</h2>
+                                    <p>Baujahr: ${car[3]}</p>
+                                    <p>${car[4]}€</p>
+                                    <p>${car[5]}</p>
+                                    <p>${car[6]}</p>
+                                    <p>${car[7]}</p>
+                                </div>
+                            </div>
+                            <button onclick="bookCar(${car[0]})" class="redirect-button">Book Test Drive</button>
+                            <button onclick="buyCar(${car[0]})" class="redirect-button">Buy</button>
+                        `;
+    
+                        carsContainer.appendChild(carDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching cars:', error);
+                    carsContainer.innerText = 'Failed to load cars';
+                });
+        });
+    </script>
+</body>
+</html>

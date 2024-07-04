@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchased Cars</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 200px;
+        }
+        button:hover {
+            background-color: #006cdf;
+        }
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <a href="/home-customer/discover">Discover</a>
+        <a href="/home-customer/search">Search</a>
+        <a href="/home-customer/booked">Booked</a>
+        <a href="/home-customer/reviews">All Reviews</a>
+        <a href="/home-customer/myreviews">My Reviews</a>
+        <a class="active" href="/home-customer/purchased-cars">Purchased Cars</a>
+        <a href="/home-customer/account" class="account-link">
+            <img src="/account.png" alt="Account Icon" class="account-icon">
+        </a>
+        <a class="user-name" id="user-name">name</a>
+    </div>
+    <div id="cars-container" style="padding-top: 60px;"></div>
+    <script>
+        fetch('/api/user')
+            .then(data => {
+                if (!data.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                return data.json();
+            })
+            .then(data => {
+                document.getElementById('user-name').textContent = `${data.firstName}`;
+            })
+            .catch(error => console.error('Error fetching user data:', error));
+
+        fetch('/api/customer-transactions')
+            .then(response => {
+                if (!response.ok) {
+                    alert('No bought cars.');
+                    throw new Error('Failed to fetch transactions');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const carsContainer = document.getElementById('cars-container');
+                data.transactions.forEach(transaction => {
+                    const carDiv = document.createElement('div');
+                    carDiv.className = 'car-box';
+                    carDiv.innerHTML = `
+                        <h2>Transaction ID: ${transaction[0]}</h2>
+                        <p>Car ID: ${transaction[1]}</p>
+                        <p>Model: ${transaction[2]}</p>
+                        <p>Price: ${transaction[3]}</p>
+                        <p>Employee ID: ${transaction[4]}</p>
+                        <p>Employee Last Name: ${transaction[5]}</p>
+                        <p>Customer ID: ${transaction[6]}</p>
+                        <p>Customer Last Name: ${transaction[7]}</p>
+                    `;
+                    carsContainer.appendChild(carDiv);
+                });
+            })
+            .catch(error => console.error('Error fetching transactions:', error));
+    </script>
+</body>
+</html>

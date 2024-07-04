@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Cars</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .sickofthis {
+            padding-top: 10px;
+            background-color: #FFFFFF;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sickofthis > div {
+            background-color: #FFFFFF;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            background-color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding-top: 10px;
+        }
+
+        .box {
+            background-color: #FFFFFF;
+            padding-left: 10px;
+            padding-right: 10px;
+            position: fixed;
+            max-width: 100%;
+            width: 100%;
+            padding-top: 70px;
+        }
+
+        .form-group input[type="submit"],
+        .form-group input[type="button"],
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .form-group input[type="submit"]:hover,
+        .form-group input[type="button"]:hover,
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        table {
+            max-width: 100%;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 110px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 4px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" href="/home-employee/manage-cars">Manage Cars</a>
+        <a href="/home-employee/transactions">Transactions</a>
+        <a href="/home-employee/booked">Booked Test Drives</a>
+        <a href="/home-employee/reviews">All Reviews</a>
+        <a href="/home-employee/parts">Part Deliverants</a>
+        <a href="/home-employee/statistics">Statistics</a>
+        <a href="/home-employee/account" class="account-link">
+            <img src="/account.png" alt="Description of the image" class="account-icon">
+        </a>
+        <a class="user-name" id="user-name">name</a>
+    </div>
+    <form action="/add-car" class="box" method="post">
+        <div class="sickofthis">
+            <div>Marke: <input type="text" name="marke" id="marke" required></div>
+            <div>Modell: <input type="text" name="modell" id="modell" required></div>
+            <div>Baujahr: <input type="number" name="baujahr" id="baujahr" required></div>
+            <div>Preis: <input type="text" name="preis" id="preis" required></div>
+            <div>Leistung(PS): <input type="number" name="leistung" id="leistung" required></div>
+            <div class="input-group">
+                <label for="typ">Typ:</label>
+                <select name="typ" id="typ" required>
+                    <option value="">Select Typ...</option>
+                    <option value="Convertible (spider/spyder, cabrio/cabriolet, drop/open/soft top)">Convertible (spider/spyder, cabrio/cabriolet, drop/open/soft top)</option>
+                    <option value="Wagon (station wagon, estate, combi, touring)">Wagon (station wagon, estate, combi, touring)</option>
+                    <option value="SUV (Sports Utility Vehicle)">SUV (Sports Utility Vehicle)</option>
+                    <option value="Coupé (two-door)">Coupé (two-door)</option>
+                    <option value="Hatchback">Hatchback</option>
+                    <option value="Truck">Truck</option>
+                    <option value="Van">Van</option>
+                    <option value="nan">nan</option>
+                </select>
+            </div>
+            <div>Max Geschwindigkeit (km/h): <input type="number" name="max_geschwindigkeit" id="max_geschwindigkeit" required></div>
+            <div>Zylinder: <input type="text" name="zylinder" id="zylinder" required></div>
+        </div>
+        <div class="sickofthis">
+            <div class="input-group">
+                <label for="klasse">Klasse:</label>
+                <select name="klasse" id="klasse" required>
+                    <option value="">Select Klasse...</option>
+                    <option value="Upper Premium">Upper Premium</option>
+                    <option value="Small SUV">Small SUV</option>
+                    <option value="Large MPV">Large MPV</option>
+                    <option value="Premium SUV">Premium SUV</option>
+                    <option value="Exotic">Exotic</option>
+                    <option value="Medium Premium">Medium Premium</option>
+                    <option value="Coupe">Coupe</option>
+                    <option value="Lower Premium">Lower Premium</option>
+                    <option value="Small">Small</option>
+                    <option value="Crossover">Crossover</option>
+                    <option value="Large SUV">Large SUV</option>
+                    <option value="Medium MPV">Medium MPV</option>
+                    <option value="Small Pickup">Small Pickup</option>
+                    <option value="Coupe Cabrio">Coupe Cabrio</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Large">Large</option>
+                    <option value="Entry Premium">Entry Premium</option>
+                    <option value="Medium SUV">Medium SUV</option>
+                    <option value="Premium Coupe">Premium Coupe</option>
+                    <option value="Roadster & Convertible">Roadster & Convertible</option>
+                    <option value="Mini">Mini</option>
+                    <option value="Fullsize Pickup">Fullsize Pickup</option>
+                    <option value="Compact SUV">Compact SUV</option>
+                    <option value="Midsize Pickup">Midsize Pickup</option>
+                    <option value="Compact">Compact</option>
+                    <option value="Luxury">Luxury</option>
+                    <option value="Small MPV">Small MPV</option>
+                    <option value="Heavy Duty Pickup">Heavy Duty Pickup</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="drehmoment" >Drehmoment:</label>
+                <input type="text" name="drehmoment" id="drehmoment" required>
+            </div>
+            <div class="input-group">
+                <label for="treibstoff">Treibstoff:</label>
+                <select name="treibstoff" id="treibstoff" required>
+                    <option value="">Select treibstoff...</option>
+                    <option value="Mild Hybrid">Mild Hybrid</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Natural Gas">Natural Gas</option>
+                    <option value="Ethanol">Ethanol</option>
+                    <option value="Mild Hybrid Diesel">Mild Hybrid Diesel</option>
+                    <option value="Gasoline">Gasoline</option>
+                    <option value="Plug-in Hybrid">Plug-in Hybrid</option>
+                    <option value="Electric">Electric</option>
+                    <option value="Hybrid Gasoline">Hybrid Gasoline</option>
+                    <option value="Liquefied Petroleum Gas (LPG)">Liquefied Petroleum Gas (LPG)</option>
+                    <option value="">nan</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="antrieb">Antrieb:</label>
+                <select name="antrieb" id="antrieb" required>
+                    <option value="">Select Antrieb...</option>
+                    <option value="All Wheel Drive">All Wheel Drive</option>
+                    <option value="Front Wheel Drive">Front Wheel Drive</option>
+                    <option value="Rear Wheel Drive">Rear Wheel Drive</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="schaltung">Schaltung:</label >
+                <input type="text" name="schaltung" id="schaltung" required>
+            </div>
+            <div class="input-group">
+                <label for="gewicht">Gewicht (kg):</label>
+                <input type="number" name="gewicht" id="gewicht" required>
+            </div>
+            <div class="input-group">
+                <label for="marke_bild">Marke Bild URL:</label>
+                <input type="text" name="marke_bild" id="marke_bild" required>
+            </div>
+            <div class="input-group">
+                <label for="auto_bild">Auto Bild URL:</label>
+                <input type="text" name="auto_bild" id="auto_bild" required>
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="beschreibung">Beschreibung:</label>
+            <textarea name="beschreibung" rows="4" cols="50" id="beschreibung" placeholder="No Description Available"></textarea>
+        </div>
+        <div class="button-container form-group">
+            <input type="submit" value="Add Car">
+            <input type="button" value="Search For Car" id="search">
+        </div>
+    </form>
+    <div id="cars-container" style="padding-top: 260px;">
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th>Id:</th>
+                    <th>Marke</th>
+                    <th>Modell</th>
+                    <th>Baujahr</th>
+                    <th>Preis</th>
+                    <th>Leistung</th>
+                    <th>Typ</th>
+                    <th>Klasse</th>
+                    <th>Zylinder</th>
+                    <th>Drehmoment</th>
+                    <th>Treibstoff</th>
+                    <th>Max Geschwindigkeit</th>
+                    <th>Antrieb</th>
+                    <th>Schaltung</th>
+                    <th>Gewicht</th>
+                    <th>Marke Bild</th>
+                    <th>Auto Bild</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        alert("the fields are only required for the add car, the editing works by clicking on the element, editing, and then pressing safe");
+        function editEntry(button) {
+            const row = button.closest('tr');
+            const carData = {
+                id: row.querySelector('.delete-btn').getAttribute('data-id'), // 
+                marke: row.cells[0].querySelector('div').textContent,
+                modell: row.cells[1].querySelector('div').textContent,
+                baujahr: row.cells[2].querySelector('div').textContent,
+                preis: row.cells[3].querySelector('div').textContent,
+                leistung: row.cells[4].querySelector('div').textContent,
+                typ: row.cells[5].querySelector('div').textContent,
+                klasse: row.cells[6].querySelector('div').textContent,
+                zylinder: row.cells[7].querySelector('div').textContent,
+                drehmoment: row.cells[8].querySelector('div').textContent,
+                treibstoff: row.cells[9].querySelector('div').textContent,
+                max_geschwindigkeit: row.cells[10].querySelector('div').textContent,
+                antrieb: row.cells[11].querySelector('div').textContent,
+                schaltung: row.cells[12].querySelector('div').textContent,
+                gewicht: row.cells[13].querySelector('div').textContent,
+                marke_bild: row.cells[14].querySelector('img').src,
+                auto_bild: row.cells[15].querySelector('img').src,
+            };
+            console.log(carData);
+
+            fetch('/api/updateCar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(carData),
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert("Car updated successfully!");
+            })
+            .catch(error => {
+                alert("Failed to update car!");
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/user')
+                .then(data => {
+                    if (!data.ok) {
+                        throw new Error('Failed to fetch user data');
+                    }
+                    return data.json();
+                })
+                .then(data => {
+                    document.getElementById('user-name').textContent = `${data.firstName}`;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        function deleteEntry(carId) {
+            if (confirm('Are you sure you want to delete this car?')) {
+                fetch(`/api/deleteCar?id=${encodeURIComponent(carId)}`, {
+                    method: 'GET',
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to delete car');
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    console.log("Car deleted successfully:", result);
+                    alert("Car deleted successfully!");
+                    document.querySelector(`.delete-btn[data-id="${carId}"]`).closest('tr').remove();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("Failed to delete car!");
+                });
+            }
+        }
+
+
+        document.getElementById('search').addEventListener('click', function() {
+            const formData = {
+                marke: (document.getElementById('marke').value || '').toUpperCase() || null,
+                modell: (document.getElementById('modell').value || '').toUpperCase() || null,
+                baujahr: document.getElementById('baujahr').value || null,
+                preis: document.getElementById('preis').value || null,
+                leistung: document.getElementById('leistung').value || null,
+                typ: document.getElementById('typ').value || null,
+                max_geschwindigkeit: document.getElementById('max_geschwindigkeit').value || null,
+                zylinder: document.getElementById('zylinder').value || null,
+                klasse: document.getElementById('klasse').value || null,
+                drehmoment: document.getElementById('drehmoment').value || null,
+                treibstoff: document.getElementById('treibstoff').value || null,
+                antrieb: document.getElementById('antrieb').value || null,
+                schaltung: document.getElementById('schaltung').value || null,
+                gewicht: document.getElementById('gewicht').value || null,
+                marke_bild: document.getElementById('marke_bild').value || null,
+                auto_bild: document.getElementById('auto_bild').value || null,
+                beschreibung: document.getElementById('beschreibung').value || null,
+            };
+
+            console.log("FormData:", formData);
+
+            fetch('/api/queryManagerCars', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Data received:", data);
+                const tbody = document.querySelector("#results-table tbody");
+                tbody.innerHTML = '';
+
+                if (data.rows.length > 0) {
+                    data.rows.forEach(car => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><div contenteditable>${car[0]}</div></td>
+                            <td><div contenteditable>${car[1]}</div></td>
+                            <td><div contenteditable>${car[2]}</div></td>
+                            <td><div contenteditable>${car[3]}</div></td>
+                            <td><div contenteditable>${car[4]}</div></td>
+                            <td><div contenteditable>${car[5]}</div></td>
+                            <td><div contenteditable>${car[6]}</div></td>
+                            <td><div contenteditable>${car[7]}</div></td>
+                            <td><div contenteditable>${car[9]}</div></td>
+                            <td><div contenteditable>${car[10]}</div></td>
+                            <td><div contenteditable>${car[11]}</div></td>
+                            <td><div contenteditable>${car[12]}</div></td>
+                            <td><div contenteditable>${car[13]}</div></td>
+                            <td><div contenteditable>${car[14]}</div></td>
+                            <td><div contenteditable>${car[15]}</div></td>
+                            <td><img src="${car[16]}" alt="Marke Bild" width="100"></td>
+                            <td><img src="${car[17].split(', ')[0]}" alt="Auto Bild" width="100"></td>
+                            <td>
+                                <button type="button" class="edit-btn" onClick="editEntry(this)">Save</button>
+                                <button type="button" class="delete-btn" data-id="${car[0]}" onClick="deleteEntry(${car[0]})">Delete</button>
+                            </td>
+                        `;
+
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    alert("No cars found.");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

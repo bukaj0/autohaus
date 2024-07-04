@@ -1,0 +1,10 @@
+doctype=html
+html
+    head
+        title Express.js + Pug
+    body
+        h1 Insert New Data
+        form(action="/newId" method="post")
+            input(type="number" name="mid" id="mid" placeholder="")
+            input(type="string" name="mname" id="mname" placeholder="Alice")
+            input(type="submit")

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+    .search-container {
+        position: fixed;
+        width: 100%;
+        background-color: #FFFFFF;
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        padding: 20px;
+        margin-top: 50px;
+    }
+    .input-fields {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    select, input {
+        width: 100%;
+        padding: 8px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        flex: 1; 
+        margin: 10px;
+    }
+    label {
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 200px;
+    }
+    button:hover {
+        background-color: #006cdf;
+    }
+</style>
+
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <a href="/home-customer/discover">Discover</a>
+        <a class="active" href="/home-customer/search">Search</a>
+        <a href="/home-customer/booked">Booked</a>
+        <a href="/home-customer/reviews">All Reviews</a>
+        <a href="/home-customer/myreviews">My Reviews</a>
+        <a href="/home-customer/purchased-cars">Purchased Cars</a>
+        <a href="/home-customer/account" class="account-link">
+            <img src="/account.png" alt="Account Icon" class="account-icon">
+        </a>
+        <a class="user-name" id="user-name">name</a>
+    </div>
+    <div class="search-container">
+        <div class="input-fields">
+            <div class="input-group">
+                <label for="cars">Choose manufacturer:</label>
+                <select name="cars" id="brand">
+                    <option value="">Select A Brand</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label for="date-from">From Build Year:</label>
+                <input type="number" id="date-from" placeholder="e.g., 1995">
+            </div>
+            <div class="input-group">
+                <label for="date-to">To Build Year:</label>
+                <input type="number" id="date-to" placeholder="e.g., 2020">
+            </div>
+
+            <div class="input-group">
+                <label for="price-from">From Price:</label>
+                <input type="number" id="price-from" placeholder="e.g., 10000">
+            </div>
+
+            <div class="input-group">
+                <label for="price-to">From Price:</label>
+                <input type="number" id="price-to" placeholder="e.g., 50000">
+            </div>
+
+        </div>
+        <button id="search">Search</button>
+    </div>
+        <div id="cars-container" style="padding-top: 180px;"></div>
+    <script>
+        const carBrands = JSON.parse(localStorage.getItem('carBrands'));
+        console.log("carbrands", carBrands);
+            if (carBrands) {
+                carBrands.forEach(function(brand) {
+                    const selectElement = document.getElementById('brand');
+                    const option = document.createElement('option');
+                    option.value = brand;
+                    option.textContent = brand;
+                    selectElement.appendChild(option);
+                    console.log("YAAAAAY", brand);
+                });
+            }
+
+        fetch('/api/user')
+                .then(data => {
+                    console.log(data);
+                    if (!data.ok) {
+                        throw new Error('Failed to fetch user data');
+                    }
+                    return data.json();
+                })
+                .then(data => {
+                    document.getElementById('user-name').textContent = `${data.firstName}`;
+        })
+
+        function bookCar(carId) {
+            console.log(carId);
+            fetch(`/api/book-car?carId=${encodeURIComponent(carId)}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to book car');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Booking successful!');
+            })
+            .catch(error => console.error('Error booking car:', error));
+        }
+
+        function buyCar(carId) {
+            console.log("Buying car:", carId);
+            fetch(`/api/buy-car?carId=${encodeURIComponent(carId)}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to buy car');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Purchase successful!');
+            })
+            .catch(error => console.error('Error buying car:', error));
+        }
+
+        document.getElementById('search').addEventListener('click', function() {
+            const brand = document.getElementById('brand').value;
+            const fromYear = document.getElementById('date-from').value;
+            const toYear = document.getElementById('date-to').value;
+            const fromPrice = document.getElementById('price-from').value;
+            const toPrice = document.getElementById('price-to').value;
+            const query = `/api/cars?brand=${encodeURIComponent(brand)}&fromYear=${encodeURIComponent(fromYear)}&toYear=${encodeURIComponent(toYear)}&fromPrice=${encodeURIComponent(fromPrice)}&toPrice=${encodeURIComponent(toPrice)}`;
+            
+            const carsContainer = document.getElementById('cars-container');
+            carsContainer.innerHTML = '';
+
+            fetch(query)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Cars data:', data);
+                    const carsContainer = document.getElementById('cars-container');
+                    data.rows.forEach(car => {
+                        const carDiv = document.createElement('div');
+                        carDiv.className = 'car-box';
+    
+                        const imageUrl = car[17].split(', ')[0];
+                        const redirectUrl = "https://example.com/detail?id=" + car[0];
+
+                        const bookUrl = '/book?=' + car[0];
+                        const buyUrl = '/buy?=' + car[0];
+
+                        carDiv.innerHTML = `
+                            <div class="car-details">
+                                <img src="${imageUrl}" alt="Car Image" class="car-image">
+                                <div>
+                                    <h2>${car[2]}</h2>
+                                    <p>Baujahr: ${car[3]}</p>
+                                    <p>${car[4]}€</p>
+                                    <p>${car[5]}</p>
+                                    <p>${car[6]}</p>
+                                    <p>${car[7]}</p>
+                                </div>
+                            </div>
+                            <button onclick="bookCar(${car[0]})" class="redirect-button">Book Test Drive</button>
+                            <button onclick="buyCar(${car[0]})" class="redirect-button">Buy</button>
+                        `;
+
+                        carsContainer.appendChild(carDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching car data:', error);
+                });
+            });
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Logos Grid</Title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .image-grid a {
+            display: block;
+        }
+
+        .image-grid img {
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .image-grid a:hover img {
+            transform: scale(1.1);
+        }
+
+        .grid_container
+        {
+            padding-top: 70px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="topnav">
+        <a class="active" href="/discover">Discover</a>
+        <a href="/home-customer/search">Search</a>
+        <a href="home-customer/booked">Booked</a>
+        <a href="/home-customer/reviews">All Reviews</a>
+        <a href="/home-customer/myreviews">My Reviews</a>
+        <a href="/home-customer/purchased-cars">Purchased Cars</a>
+        <a href="/account" class="account-link">
+            <img src="/account.png" alt="Description of the image" class="account-icon">
+        </a>
+    </div>
+    <div id="grid_container" class="grid_container">
+        <div id="logo-grid" class="image-grid">
+        </div>
+    </div>
+    
+
+    <script>
+
+        
+        async function fetchCarData() {
+            try {
+                console.log("Fetching car data...");
+                const response = await fetch('/api/cars');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const carsData = await response.json();
+                console.log("Cars data:", carsData);
+
+                const cars = carsData.rows;
+
+                let carSet = new Set();
+                let identifiers = new Set();
+
+                //carbrand collection
+                let carBrand = new Set();
+
+                cars.forEach(car => {
+                    const identifier = car[16];
+                    if (!identifiers.has(identifier)) {
+                        identifiers.add(identifier);
+                        carSet.add(car);
+                        carBrand.add(car[1]);
+                    }
+                });
+
+                console.log("Unique car logos added:", carSet.size);
+
+                const logoGrid = document.getElementById('logo-grid');
+
+                carSet.forEach(car => {
+                    const a = document.createElement('a');
+                    const img = document.createElement('img');
+                    img.src = car[16];
+                    img.alt = 'Logo Image';
+                    img.style.width = '100%';
+
+
+                    img.onclick = function() {
+                    window.location.href = `/cars.html?brand=${encodeURIComponent(car[1])}`;
+                    };
+
+                    a.appendChild(img);
+                    logoGrid.appendChild(a);
+                });
+                
+                console.log("AAAAAAAAA",carBrand);
+                localStorage.setItem('carBrands', JSON.stringify(Array.from(carBrand)));
+
+            } catch (error) {
+                console.error('Error fetching car data:', error);
+            }
+        }
+        window.onload = fetchCarData;
+    </script>
+</body>
+</html>

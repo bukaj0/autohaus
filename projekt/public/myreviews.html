@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cars Display</title>
+    <link rel="stylesheet" href="/style.css">
+<style>
+    button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 200px;
+    }
+    button:hover {
+        background-color: #006cdf;
+    }
+</style> 
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/home-customer/discover">Discover</a>
+        <a href="/home-customer/search">Search</a>
+        <a href="/home-customer/booked">Booked</a>
+        <a href="/home-customer/reviews">All Reviews</a>
+        <a class="active" href="/home-customer/myreviews">My Reviews</a>
+        <a href="/home-customer/purchased-cars">Purchased Cars</a>
+        <a href="/home-customer/account" class="account-link">
+            <img src="/account.png" alt="Account Icon" class="account-icon">
+        </a>
+        <a class="user-name" id="user-name">name</a>
+    </div>
+    <button id="create" class="button" style="margin-top:70px; margin-left:20px">Create New Review</button>
+    <div id="newReviewForm" style="display: none; padding: 20px;">
+        <form onsubmit="submitNewReview(event)">
+            <label for="newRating">Rating (1-5):</label>
+            <input type="number" id="newRating" min="1" max="5" required>
+            <label for="newReviewText">Review:</label>
+            <textarea id="newReviewText" required></textarea>
+            <button type="submit">Submit Review</button>
+        </form>
+    </div>
+    <div id="cars-container" style="margin-top:10px;"></div>
+
+    <script>
+
+        document.getElementById('create').onclick = function() {
+            var form = document.getElementById('newReviewForm');
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        };
+
+        function submitNewReview(event) {
+            event.preventDefault();
+            const rating = document.getElementById('newRating').value;
+            const reviewText = document.getElementById('newReviewText').value;
+            fetch(`/api/reviews/create?rating=${encodeURIComponent(rating)}&text=${encodeURIComponent(reviewText)}`,{method: 'POST'})
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Review created successfully:', data);
+                    document.getElementById('newReviewForm').style.display = 'none';
+                    alert('Review submitted successfully');
+                    location.reload(); 
+                })
+                .catch(error => {
+                    console.error('Error creating review:', error);
+                    alert('Failed to submit review.');
+                });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/user')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('user-name').textContent = `${data.firstName}`;
+                    fetch(`/api/reviews?userId=${encodeURIComponent(data.userId)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("REVIEWS", data);
+                            const carsContainer = document.getElementById('cars-container');
+                            data.rows.forEach(review => {
+                                const carDiv = document.createElement('div');
+                                carDiv.className = 'car-box';
+                                carDiv.id = `review-${review[0]}`;
+
+                                carDiv.innerHTML = `
+                                    <div class="car-details">
+                                        <div>
+                                            <p class="rating">Rating (1-5): ${review[1]}</p>
+                                            <p class="review-text">Review: ${review[2]}</p>
+                                        </div>
+                                        <button onclick="editReview(${review[0]})" class="redirect-button">Edit Review</button>
+                                        <button onclick="deleteReview(${review[0]})" class="redirect-button">Delete Review</button>
+                                    </div>
+                                `;
+
+                                carsContainer.appendChild(carDiv);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error fetching reviews:', error);
+                            document.getElementById('cars-container').innerText = 'Failed to load reviews';
+                        });
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                });
+        });
+
+        function editReview(reviewId) {
+            const reviewDiv = document.querySelector(`#review-${reviewId}`);
+            const currentRating = reviewDiv.querySelector(".rating").innerText.split(': ')[1];
+            const currentReviewText = reviewDiv.querySelector(".review-text").innerText.split(': ')[1];
+
+            reviewDiv.innerHTML = `
+                <div>
+                    <label>Rating (1-5):</label>
+                    <input type="number" id="edit-rating-${reviewId}" value="${currentRating}" min="1" max="5" />
+                    <label>Review:</label>
+                    <textarea id="edit-review-${reviewId}">${currentReviewText}</textarea>
+                    <button onclick="saveReview(${reviewId})">Save Changes</button>
+                    <button onclick="cancelEdit(${reviewId}, '${currentRating}', '${currentReviewText}')">Cancel</button>
+                </div>
+            `;
+        }
+
+        function saveReview(reviewId) {
+            const newRating = document.getElementById(`edit-rating-${reviewId}`).value; 
+            const newReviewText = document.getElementById(`edit-review-${reviewId}`).value;
+
+            fetch(`/api/reviews/update?reviewId=${encodeURIComponent(reviewId)}&rating=${encodeURIComponent(newRating)}&reviewText=${encodeURIComponent(newReviewText)}`, {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to save review');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Review updated successfully');
+                cancelEdit(reviewId, newRating, newReviewText);
+            })
+            .catch(error => {
+                console.error('Error updating review:', error);
+                alert('Failed to update review.');
+            });
+        }
+
+
+        function cancelEdit(reviewId, rating, reviewText) {
+            const reviewDiv = document.querySelector(`#review-${reviewId}`);
+            reviewDiv.innerHTML = `
+                <div class="car-details">
+                    <div>
+                        <p class="rating">Rating (1-5): ${rating}</p>
+                        <p class="review-text">Review: ${reviewText}</p>
+                    </div>
+                    <button onclick="editReview(${reviewId})" class="redirect-button">Edit Review</button>
+                    <button onclick="deleteReview(${reviewId})" class="redirect-button">Delete Review</button>
+                </div>
+            `;
+        }
+
+        function deleteReview(reviewId) {
+            if (confirm('Are you sure you want to delete this review?')) {
+                fetch(`/api/reviews/delete?reviewId=${encodeURIComponent(reviewId)}`, {
+                    method: 'POST'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to delete review');
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    const reviewDiv = document.querySelector(`#review-${reviewId}`);
+                    if (reviewDiv) {
+                        reviewDiv.remove();
+                        console.log('Review deleted successfully');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting review:', error);
+                    alert('Failed to delete review.');
+                });
+            }
+        }
+
+    </script>
+</body>
+</html>

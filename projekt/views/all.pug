@@ -1,0 +1,12 @@
+doctype html
+html
+    head
+        title Express.js + Pug
+        link(rel="stylesheet" href="/style.css")
+    body
+        h1 All Entries (MIDs)
+            each row in mdata
+                div.Message
+                    div.Title
+                        h3 Entry #{row[0]}
+                        span.Details #{row[1]}
