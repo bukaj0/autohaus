@@ -1,0 +1,2 @@
+projekt/database/instantclient_19_8/libclntsh.dylib.19.1 filter=lfs diff=lfs merge=lfs -text
+projekt/database/instantclient_19_8/libociei.dylib filter=lfs diff=lfs merge=lfs -text
